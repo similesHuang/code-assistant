@@ -5,6 +5,7 @@ import "./globals.css";
 import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import AntdPatch from './components/AntdPath';
+import GlobalProvider from './hooks/GlobalProvider';
 
 
 const geistSans = Geist({
@@ -32,8 +33,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         <AntdPatch />
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdPatch />
+        <AntdRegistry>
+          <GlobalProvider>
+            {children}
+          </GlobalProvider>
+          </AntdRegistry>
       </body>
     </html>
   );
