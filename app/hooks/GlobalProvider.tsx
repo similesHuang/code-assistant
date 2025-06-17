@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
+import { MessageType } from "../components/types";
 
 type BaseAction = {
   type: string;
@@ -55,7 +56,13 @@ const DispatchContext = createContext<Dispatch<BaseAction>>(() => {});
 const StoreContext = createContext<Record<string, any>>({});
 const GlobalProvider = ({ children }: ProviderProps) => {
   const [store, dispatch] = useReducer(chatReducer, {
-    messages: [],
+    messages: [
+      {
+         id:'1',
+        type: "system",
+        content: "欢迎使用AI助手，请输入您的问题或选择技能。",
+      }
+    ],
     inputValue: "",
     loading: false,
     selectedTab: "code",
@@ -65,5 +72,20 @@ const GlobalProvider = ({ children }: ProviderProps) => {
       <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
     </DispatchContext.Provider>
   );
+};
+
+export const useGlobalDispatch = () => {
+  const dispatch = useContext(DispatchContext);
+  if (!dispatch) {
+    throw new Error("useGlobalDispatch must be used within a GlobalProvider");
+  }
+  return dispatch;
+};
+export const useGlobalStore = () => {
+  const store = useContext(StoreContext);
+  if (!store) {
+    throw new Error("useGlobalStore must be used within a GlobalProvider");
+  }
+  return store;
 };
 export default GlobalProvider;

@@ -1,4 +1,4 @@
-interface MessageType {
+export interface MessageType {
     id:string;
     content: string;
     loading?: boolean;

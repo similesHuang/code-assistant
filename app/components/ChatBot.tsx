@@ -10,6 +10,8 @@ import { Affix, Button, Input } from "antd";
 import { useState } from "react";
 import CodeEditor from "../components/CodeEditor";
 import CodePreview from "./CodePreview";
+import { useGlobalDispatch, useGlobalStore } from "../hooks/GlobalProvider";
+import { MessageType } from "./types";
 
 const mockData = `const CodeEditor = ()=>{
      return <></>
@@ -17,73 +19,17 @@ const mockData = `const CodeEditor = ()=>{
 export default CodeEditor;`;
 
 const ChatBot = () => {
-  const [messages, setMessages] = useState<MessageType[]>([
-    {
-      id: "system-1",
-      content:
-        "我是AI聊天助手，我可以帮你生成代码并在右侧预览。请输入你的需求。",
-      type: "system",
-    },
-    {
-      id: "use_1",
-      content: "你是谁",
-      type: "user",
-    },
-    {
-      id: "assistant",
-      content: "以上代码实现了",
-      type: "assistant",
-      isFile: true,
-    },
-  ]);
+ 
+  const  dispatch = useGlobalDispatch();
+  const  {messages} = useGlobalStore();
   const [inputValue, setInputValue] = useState("");
-  const [isCoding, setIsCoding] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("code");
-  const [loading, setLoading] = useState(false);
-
-  const tabs = [
-    {
-      key: "code",
-      label: "代码",
-      componennt: <CodeEditor />,
-    },
-    {
-      key: "preview",
-      label: "预览",
-      component: <CodePreview />,
-    },
-  ];
   const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      setMessages((prev) => [
-        ...prev,
-        { id: `user-${Date.now()}`, content: inputValue, type: "user" },
-      ]);
-      // 模拟AI回复
-      setLoading(true);
-      setTimeout(() => {
-        const newMessage: MessageType = {
-          id: `assistant-${Date.now()}`,
-          content: `这是关于 "${inputValue}" 的代码示例。`,
-          type: "assistant",
-          isFile: true,
-          file: {
-            content: mockData,
-            name: "chat.tsx",
-            language: "javascript",
-          },
-        };
-        setMessages((prev) => [...prev, newMessage]);
-        setLoading(false);
-        setIsCoding(true);
-      }, 300);
-      setInputValue("");
-    }
+  
   };
 
   return (
     <div
-      className={`flex w-[50%]`}
+      className={`flex w-[50%] p-4`}
       style={{ height: "calc(100vh - 64px)" }}
     >
       <div
@@ -94,7 +40,7 @@ const ChatBot = () => {
           className="w-full flex flex-col"
           style={{ maxHeight: "calc(100vh - 204px)", overflowY: "scroll" }}
         >
-          {messages?.map((messages) => {
+          {messages?.map((messages:MessageType) => {
             if (messages.type === "system" || messages?.type === "assistant") {
               return (
                 <div key={messages?.id} className="p-[12px]">
