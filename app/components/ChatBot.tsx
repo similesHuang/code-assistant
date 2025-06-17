@@ -83,12 +83,12 @@ const ChatBot = () => {
 
   return (
     <div
-      className={`flex ${isCoding ? "w-full" : "w-[50%]"}`}
+      className={`flex w-[50%]`}
       style={{ height: "calc(100vh - 64px)" }}
     >
       <div
-        className={!isCoding ? "w-full" : "w-1/2"}
-        style={{ transition: "width 0.5s ease-in-out" }}
+     
+        style={{ transition: "width 0.5s ease-in-out",width:'100%' }}
       >
         <div
           className="w-full flex flex-col"
@@ -150,29 +150,7 @@ const ChatBot = () => {
         </div>
         </Affix>
       </div>
-      {isCoding && <div    className={`
-        w-1/2 h-full
-        transform transition-all duration-500 ease-out
-        ${isCoding 
-          ? 'translate-x-0 opacity-100' 
-          : 'translate-x-full opacity-0'
-        }
-      `}
-    >
-        <div className="p-4 h-full">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-white font-bold">代码编辑器</h3>
-          <Button 
-            type="text" 
-            onClick={() => setIsCoding(false)}
-            className="text-white hover:bg-red-600"
-          >
-            ✕
-          </Button>
-        </div>
-        {/* 其他内容 */}
-      </div>
-      </div>}
+     
     </div>
   );
 };
