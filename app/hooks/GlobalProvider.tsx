@@ -59,8 +59,8 @@ const GlobalProvider = ({ children }: ProviderProps) => {
     messages: [
       {
          id:'1',
-        type: "system",
-        content: "欢迎使用AI助手，请输入您的问题或选择技能。",
+         roles: "system",
+         content: "欢迎使用AI助手，请输入您的问题或选择技能。",
       }
     ],
     inputValue: "",

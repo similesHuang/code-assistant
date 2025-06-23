@@ -1,12 +1,5 @@
 export interface MessageType {
-    id:string;
+    id: string;
     content: string;
-    loading?: boolean;
-    type:'user'|'assistant'|'system';
-    isFile?: boolean;
-    file?: {
-        content: string;
-        name:string;
-        language: string;
-    }
+    roles: "user" | "system"|'assistant';
 }
