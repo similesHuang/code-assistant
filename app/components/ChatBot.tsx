@@ -22,7 +22,7 @@ const ChatBot = () => {
   const { messages } = useGlobalStore();
   const [inputContent, setInputContent] = useState("");
   const [streamingContent, setStreamingContent] = useState(""); 
-  const {getDifyKnowledge,context} = useMdelContext();
+  const {getDifyKnowledge,setContext,context} = useMdelContext();
 
   const handleSendMessage = async () => {
     if (!inputContent.trim()) return;
@@ -36,10 +36,20 @@ const ChatBot = () => {
     });
    
     const knowledge = await getDifyKnowledge(inputContent);
-    
-  
+
     const res = await httpRequest.post("/api/chat",{
-        messages: [{ role: "user", content: inputContent }],
+        messages: [
+            {
+            role: "system",
+            content: `你是一个前端react智能助手，你需要根据用户输入的内容以及提供的react代码，生成模版组件`,
+          },
+          { role: "user", content: inputContent },
+          {
+            role:'assistant',
+            content: knowledge || "请稍等，我正在为您查询相关信息...",
+          },
+        
+        ],
       }, {
       headers: { "Content-Type": "application/json" },
     });
@@ -71,7 +81,9 @@ const ChatBot = () => {
     // 清空
     setStreamingContent("");
     setInputContent(""); 
+    setContext([]); 
   };
+ 
   useEffect(() => {}, []);
 
   return (

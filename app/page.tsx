@@ -9,7 +9,7 @@ import httpRequest from "./utils/request";
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState("editor");
   const [code, setCode] = useState('');
-  
+
   const renderTabContent = () => {
     if (selectedTab === "editor") {
       return <CodeEditor code={code} setCode={setCode}></CodeEditor>;
@@ -19,19 +19,8 @@ export default function Home() {
     return null;
   };
 
-  const getDifyKnowledge = async () => {
-    try {
-      const { records } = await httpRequest.post("/api/dify", {
-        query: "左树右表",
-      });
-      console.log("Dify knowledge base response:", records);
-    } catch (err) {
-      console.error("Error fetching Dify knowledge base:", err);
-    }
-  };
-  useEffect(() => {
-    getDifyKnowledge();
-  }, []);
+
+
   return (
     <div className="flex w-full">
       <ChatBot></ChatBot>

@@ -16,14 +16,12 @@ export async function POST(request: NextRequest) {
           stream: true,
         });
 
-      
         for await (const chunk of completion) {
           const content = chunk.choices?.[0]?.delta?.content || "";
-          controller.enqueue(new TextEncoder().encode(content)); // 无data:前缀
+          controller.enqueue(new TextEncoder().encode(content)); 
         }
 
       } catch (err) {
-       
         controller.enqueue(new TextEncoder().encode(`[ERROR] ${String(err)}`));
       } finally {
         controller.close();
