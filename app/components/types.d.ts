@@ -1,5 +1,5 @@
 export interface MessageType {
-    id: string;
+    id?: string;
     content: string;
-    roles: "user" | "system"|'assistant';
+    role: "user" | "system"|'assistant';
 }

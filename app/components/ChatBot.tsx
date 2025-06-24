@@ -15,14 +15,19 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 import "github-markdown-css/github-markdown-light.css";
 import httpRequest from "../utils/request";
-import useMdelContext from "../hooks/useModelContext";
-import { get } from "http";
-const ChatBot = () => {
+import renderTemplate from "../script/renderTemplate";
+
+
+const ChatBot:React.FC<{
+  setCode: (value: string) => void;
+}> = ({
+  setCode,
+}) => {
   const dispatch = useGlobalDispatch();
   const { messages } = useGlobalStore();
   const [inputContent, setInputContent] = useState("");
   const [streamingContent, setStreamingContent] = useState(""); 
-  const {getDifyKnowledge,setContext,context} = useMdelContext();
+
 
   const handleSendMessage = async () => {
     if (!inputContent.trim()) return;
@@ -31,25 +36,29 @@ const ChatBot = () => {
       payload: {
         id: Date.now().toString(),
         content: inputContent,
-        roles: "user",
+        role: "user",
       },
     });
    
-    const knowledge = await getDifyKnowledge(inputContent);
-
     const res = await httpRequest.post("/api/chat",{
         messages: [
-            {
-            role: "system",
-            content: `你是一个前端react智能助手，你需要根据用户输入的内容以及提供的react代码，生成模版组件`,
-          },
-          { role: "user", content: inputContent },
           {
-            role:'assistant',
-            content: knowledge || "请稍等，我正在为您查询相关信息...",
+            role: "system",
+            content: `你是一个前端react智能助手，你需要根据用户输入的内容以及知识库提供的模版代码，生成符合用户需求的业务组件`,
           },
-        
+          {
+            role:'system',
+            content:'谨记，你只能修改模版代码中带有注释// TODO: 部分对应的代码模块，其他代码不允许修改',
+          },
+          {
+            role:'system',
+            content:'你需要根据用户输入的内容，检索知识库中相关的模版代码以及mock数据，将模版代码完整的返回给用户',
+          },
+          { role: "user", 
+            content: inputContent 
+          },  
         ],
+        inputContent
       }, {
       headers: { "Content-Type": "application/json" },
     });
@@ -65,23 +74,21 @@ const ChatBot = () => {
       // 解析 SSE 格式
       const chunk = decoder.decode(value, { stream: true });
       result += chunk;;
-      setStreamingContent(result); // 实时渲染
+      setStreamingContent(result); 
+      setCode(renderTemplate(result)); 
+      console.log("Streaming content:", renderTemplate(result));
     }
-    console.log("流式响应结果：", result);
- 
     dispatch({
       type: "ADD_MESSAGE",
       payload: {
-        id: Date.now().toString() + "-assistant",
+        id: Date.now().toString(),
         content: result,
-        roles: "assistant",
+        role: "assistant",
       },
     });
 
-    // 清空
     setStreamingContent("");
     setInputContent(""); 
-    setContext([]); 
   };
  
   useEffect(() => {}, []);
@@ -97,7 +104,7 @@ const ChatBot = () => {
           style={{ height: "calc(100vh - 124px)", overflowY: "scroll" }}
         >
           {messages?.map((msg: MessageType) => {
-            if (msg?.roles !== "user") {
+            if (msg?.role !== "user") {
               return (
                 <div
                   key={msg?.id}

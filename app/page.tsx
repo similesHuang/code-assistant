@@ -4,7 +4,6 @@ import ChatBot from "./components/ChatBot";
 import { Segmented } from "antd";
 import CodeEditor from "./components/CodeEditor";
 import CodePreview from "./components/CodePreview";
-import httpRequest from "./utils/request";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState("editor");
@@ -23,7 +22,7 @@ export default function Home() {
 
   return (
     <div className="flex w-full">
-      <ChatBot></ChatBot>
+      <ChatBot setCode={setCode}></ChatBot>
       <div className="flex-1 p-4">
         <Segmented
           onChange={(value) => setSelectedTab(value as string)}

@@ -59,7 +59,7 @@ const GlobalProvider = ({ children }: ProviderProps) => {
     messages: [
       {
          id:'1',
-         roles: "system",
+         role: "system",
          content: "欢迎使用AI助手，请输入您的问题或选择技能。",
       }
     ],

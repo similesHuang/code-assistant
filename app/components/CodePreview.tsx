@@ -1,24 +1,62 @@
 import { LiveProvider, LivePreview } from "react-live";
+import qs from "query-string";
+import * as antd from "antd";
+import * as infraUtils from '@bilibili/infra-utils';
 
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+// mock useLocation 和 history
+const mockLocation = {
+  pathname: "/",
+  search: "",
+};
+const useLocation = () => mockLocation;
+const history = {
+  replace: (v: any) => {
+    // 可以在这里打印或忽略
+    // console.log("history.replace", v);
+  },
+};
 const CodePreview: React.FC<{ code: string }> = ({ code }) => {
   return (
-    <LiveProvider code={code} noInline>
+    <LiveProvider
+      code={code}
+      noInline
+       scope={{
+        React,
+        infraUtils,
+        ...antd,
+        qs,
+        useState,
+        useEffect,
+        useMemo,
+        useCallback,
+        useLocation,
+        history,
+        render: (el: any) => el,
+      }}
+    >
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          
+          height: "calc(100vh - 100px)",
+          overflowY: "auto",
           background: "#f5f6fa",
         }}
       >
         <div
           style={{
-          width: "100%",
+            width: "100%",
             borderRadius: 8,
             boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
             background: "#fff",
             border: "1px solid #e5e7eb",
-            overflow: "hidden",
+            overflow: "scroll",
           }}
         >
           {/* 浏览器头部 */}
@@ -62,7 +100,14 @@ const CodePreview: React.FC<{ code: string }> = ({ code }) => {
                 background: "#27c93f",
               }}
             />
-            <span style={{ flex: 1, textAlign: "center", color: "#999", fontSize: 12 }}>
+            <span
+              style={{
+                flex: 1,
+                textAlign: "center",
+                color: "#999",
+                fontSize: 12,
+              }}
+            >
               代码预览
             </span>
           </div>
@@ -72,7 +117,7 @@ const CodePreview: React.FC<{ code: string }> = ({ code }) => {
           </div>
         </div>
       </div>
-        </LiveProvider>
+    </LiveProvider>
   );
 };
 export default CodePreview;

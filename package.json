@@ -24,7 +24,8 @@
     "react-live": "^4.1.8",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "query-string": "^8.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

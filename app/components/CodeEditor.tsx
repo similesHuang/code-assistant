@@ -1,4 +1,3 @@
-
 import { LiveEditor, LiveError, LiveProvider } from "react-live";
 
 const CodeEditor:React.FC<{code:string,setCode:(value:string)=>void}> = ({
@@ -7,7 +6,7 @@ const CodeEditor:React.FC<{code:string,setCode:(value:string)=>void}> = ({
 }) => {
      return (
   <LiveProvider code={code} noInline>
-    <div style={{ display: "flex", gap: 24 }}>
+    <div style={{ display: "flex", gap: 24 ,height:'calc(100vh - 200px)',overflowY:'scroll'}}>
       <div style={{ flex: 1 }}>
         <LiveEditor onChange={(value)=>{
            setCode(value);
