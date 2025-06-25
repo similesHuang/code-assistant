@@ -2,6 +2,8 @@ import { LiveProvider, LivePreview } from "react-live";
 import qs from "query-string";
 import * as antd from "antd";
 import * as infraUtils from '@bilibili/infra-utils';
+// import {useLocation} from 'react-router-dom'
+// import * as history from 'history'
 
 import React, {
   useState,
@@ -9,7 +11,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-// mock useLocation 和 history
+
 const mockLocation = {
   pathname: "/",
   search: "",
@@ -21,6 +23,12 @@ const history = {
     // console.log("history.replace", v);
   },
 };
+
+const umi = {
+  history: history,
+  useLocation: useLocation,
+}
+
 const CodePreview: React.FC<{ code: string }> = ({ code }) => {
   return (
     <LiveProvider
@@ -35,8 +43,7 @@ const CodePreview: React.FC<{ code: string }> = ({ code }) => {
         useEffect,
         useMemo,
         useCallback,
-        useLocation,
-        history,
+        ...umi,
         render: (el: any) => el,
       }}
     >
